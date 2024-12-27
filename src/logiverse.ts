@@ -118,6 +118,37 @@ const app = new Hono<{ Bindings: Bindings }>()
 
         return c.json(user, 200);
     })
-    .post('/ban', (c) => c.text('Not implemented', 501));
+    .post('/ban', async (c) => {
+        const body = await c.req.json();
+        const { username, password, type, target } = body;
+        const { results: tpUserQuery } = await c.env.db
+            .prepare('SELECT * FROM `logiverse_users` WHERE username = ?')
+            .bind(ADMIN_NAME)
+            .run();
+
+        if (tpUserQuery.length === 0) return c.json({ error: 'admin user not found' }, 404);
+
+        const tpUser = tpUserQuery[0];
+        const passwordMatch = await bcrypt.compare(password, tpUser.password as string);
+
+        if (!passwordMatch) return c.json({ error: 'wrong admin apssword' }, 401);
+
+        if (type === 'kick' && target === 'name') {
+            if (username === ADMIN_NAME) return c.json({ error: 'cannot kick admin' }, 400);
+            await c.env.db.prepare('DELETE FROM `logiverse_users` WHERE username = ?').bind(username).run();
+        } else if (type === 'kick' && target === 'status') {
+            await c.env.db
+                .prepare('UPDATE `logiverse_users` SET status = "my status was removed by admin" WHERE username = ?')
+                .bind(username)
+                .run();
+        } else if (type === 'ban' && target === 'name') {
+            await c.env.db
+                .prepare('UPDATE `logiverse_users` SET banned = 1, status = "i was banned" WHERE username = ?')
+                .bind(username)
+                .run();
+        }
+
+        return c.json({ success: true }, 200);
+    });
 
 export default app;
