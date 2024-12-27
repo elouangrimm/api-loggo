@@ -12,7 +12,34 @@ const app = new Hono<{ Bindings: Bindings }>()
             .run();
         return c.json(users.map((user) => Object.values(user)));
     })
-    .post('/update', (c) => c.text('Not implemented', 501))
+    .post('/update', async (c) => {
+        const body = await c.req.json();
+        const { username, password, status, gif = null } = body;
+        const { results: users } = await c.env.db
+            .prepare('SELECT * FROM `logiverse_users` WHERE username = ?')
+            .bind(username)
+            .run();
+
+        if (users.length === 0) return c.json({ error: 'user not found' }, 400);
+
+        const user = users[0];
+        const passwordMatch = await bcrypt.compare(password, user.password as string);
+
+        if (!passwordMatch) return c.json({ error: 'wrong password' }, 401);
+
+        if (user.banned === 1) return c.json({ error: 'user is banned' }, 403);
+
+        if (status.length > 9999) return c.json({ error: 'status too long' }, 400);
+
+        await c.env.db
+            .prepare(
+                'UPDATE `logiverse_users` SET status = ?, gif = ?, last_updated = CURRENT_TIMESTAMP WHERE username = ? RETURNING gif, password, status, username'
+            )
+            .bind(status, gif, username)
+            .run();
+
+        return c.json({ gif, password, status, username }, 200);
+    })
     .post('/login', async (c) => {
         const body = await c.req.json();
         let { username, password } = body;
