@@ -95,7 +95,29 @@ const app = new Hono<{ Bindings: Bindings }>()
 
         return c.json(Object.values(existingUser));
     })
-    .post('/delete', (c) => c.text('Not implemented', 501))
+    .post('/delete', async (c) => {
+        const body = await c.req.json();
+        const { username, password } = body;
+        const { results: users } = await c.env.db
+            .prepare('SELECT * FROM `logiverse_users` WHERE username = ?')
+            .bind(username)
+            .run();
+
+        if (users.length === 0) return c.json({ error: 'user not found' }, 404);
+
+        const user = users[0];
+        const passwordMatch = await bcrypt.compare(password, user.password as string);
+
+        if (username === ADMIN_NAME) return c.json({ error: 'cannot delete admin' }, 400);
+
+        if (!passwordMatch) return c.json({ error: 'wrong password' }, 401);
+
+        if (user.banned) return c.json({ error: 'user is banned' }, 403);
+
+        await c.env.db.prepare('DELETE FROM `logiverse_users` WHERE username = ?').bind(username).run();
+
+        return c.json(user, 200);
+    })
     .post('/ban', (c) => c.text('Not implemented', 501));
 
 export default app;
