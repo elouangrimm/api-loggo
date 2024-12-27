@@ -5,7 +5,7 @@ type Bindings = {
     db: D1Database;
 };
 
-const ADMIN_NAME = 'Svenlaa';
+const ADMIN_NAME = 'Elouan';
 
 const app = new Hono<{ Bindings: Bindings }>()
     .get('/logs', async (c) => {
