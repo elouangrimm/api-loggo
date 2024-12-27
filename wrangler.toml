@@ -1,4 +1,4 @@
-name = "api-loggo"
+name = "api-logivert"
 main = "src/index.ts"
 compatibility_date = "2024-12-27"
 

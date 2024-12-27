@@ -1,5 +1,5 @@
 {
-    "name": "api-loggo",
+    "name": "api-logivert",
     "scripts": {
         "dev": "wrangler dev",
         "deploy": "wrangler deploy --minify"
