@@ -15,10 +15,10 @@ compatibility_date = "2024-12-27"
 # binding = "MY_BUCKET"
 # bucket_name = "my-bucket"
 
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "my-database"
-# database_id = ""
+[[d1_databases]]
+binding = "db"
+database_name = "api-svenlaa-com"
+database_id = "dbf1ae5e-fbfe-41f7-822b-afcb9b63c989"
 
 # [ai]
 # binding = "AI"
