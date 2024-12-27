@@ -1,8 +1,8 @@
-name = "api-svenlaa-com"
+name = "api-loggo"
 main = "src/index.ts"
 compatibility_date = "2024-12-27"
 
 [[d1_databases]]
 binding = "db"
-database_name = "api-svenlaa-com"
-database_id = "dbf1ae5e-fbfe-41f7-822b-afcb9b63c989"
+database_name = "api-loggo"
+database_id = "0f54251b-33f3-4b60-9610-6b58ff26203a"
