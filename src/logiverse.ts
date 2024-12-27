@@ -5,6 +5,8 @@ type Bindings = {
     db: D1Database;
 };
 
+const ADMIN_NAME = 'Svenlaa';
+
 const app = new Hono<{ Bindings: Bindings }>()
     .get('/logs', async (c) => {
         const { results: users } = await c.env.db
@@ -72,7 +74,8 @@ const app = new Hono<{ Bindings: Bindings }>()
             if (bannedCharacters.some((char) => username.includes(char)))
                 return c.json({ error: 'username contains banned characters. no spaces, etc...' }, 400);
 
-            if (username.toLowerCase().includes('svenlaa')) return c.json({ error: 'no svenlaa impersonation' }, 400);
+            if (username.toLowerCase().includes(ADMIN_NAME.toLowerCase()))
+                return c.json({ error: 'no admin impersonation' }, 400);
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
