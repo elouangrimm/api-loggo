@@ -60,7 +60,7 @@ const app = new Hono<{ Bindings: Bindings }>()
         const existingUser = existingUsers[0];
         if (existingUser.banned) return c.json({ error: 'user is banned' }, 400);
 
-        const passwordsMatch = bcrypt.compare(password, existingUser.password as string);
+        const passwordsMatch = await bcrypt.compare(password, existingUser.password as string);
         if (!passwordsMatch) return c.json({ error: 'wrong password' }, 400);
 
         return c.json(Object.values(existingUser));
