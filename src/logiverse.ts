@@ -6,7 +6,12 @@ type Bindings = {
 };
 
 const app = new Hono<{ Bindings: Bindings }>()
-    .get('/list', (c) => c.text('Not implemented', 501))
+    .get('/logs', async (c) => {
+        const { results: users } = await c.env.db
+            .prepare('SELECT * FROM `logiverse_users` ORDER BY `last_updated` DESC')
+            .run();
+        return c.json(users.map((user) => Object.values(user)));
+    })
     .post('/update', (c) => c.text('Not implemented', 501))
     .post('/login', async (c) => {
         const body = await c.req.json();
