@@ -10,7 +10,7 @@ const ADMIN_NAME = 'Elouan';
 const app = new Hono<{ Bindings: Bindings }>()
     .get('/logs', async (c) => {
         const { results: users } = await c.env.db
-            .prepare('SELECT status, username, last_updated, gif, banned FROM `logiverse_users` WHERE banned = 0')
+            .prepare('SELECT status, likes, username, last_updated, gif, banned FROM `logiverse_users` WHERE banned = 0')
             .run();
         return c.json(users.map((user) => Object.values(user)));
     })
