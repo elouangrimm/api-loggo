@@ -1,4 +1,4 @@
--- Migration number: 0001 	 2024-12-27T10:50:13.455Z
+-- Migration number: 0002 	 2024-12-28T12:05:13.455Z
 CREATE TABLE `logiverse_users` (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
