@@ -4,5 +4,5 @@ compatibility_date = "2024-12-27"
 
 [[d1_databases]]
 binding = "db"
-database_name = "api-loggo"
-database_id = "0f54251b-33f3-4b60-9610-6b58ff26203a"
+database_name = "api-logivert"
+database_id = "5367f769-0a1c-41f6-bcf7-0f70c4ebf5c7"
